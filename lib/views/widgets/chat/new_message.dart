@@ -1,8 +1,15 @@
+import 'package:chat_app_ahoy/blocs/chat/chat_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NewMessage extends StatefulWidget {
+  NewMessage({required this.user1, required this.user2});
+  
+  final String user1;
+  final String user2;
+
   @override
   _NewMessageState createState() => _NewMessageState();
 }
@@ -13,16 +20,8 @@ class _NewMessageState extends State<NewMessage> {
 
   void _sendMessage() async {
     FocusScope.of(context).unfocus();
-    final user = await FirebaseAuth.instance.currentUser;
-    final userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
-
-    FirebaseFirestore.instance.collection('chat').add({
-      'text': _enteredMessage,
-      'created_at': Timestamp.now(),
-      'userId': user.uid,
-      'username': userData['username'],
-      'userImage': userData['image_url'],
-    });
+    
+    BlocProvider.of<ChatBloc>(context).sendMessage( _enteredMessage, widget.user1, widget.user2);
   
     _controller.clear();
   }

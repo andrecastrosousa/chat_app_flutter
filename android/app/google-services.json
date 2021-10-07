@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "893908220307",
-    "project_id": "flutter-chat-310fc",
-    "storage_bucket": "flutter-chat-310fc.appspot.com"
+    "project_number": "1091213170590",
+    "project_id": "flutter-chat-ahoy",
+    "storage_bucket": "flutter-chat-ahoy.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:893908220307:android:98aba742169ecfb77c9066",
+        "mobilesdk_app_id": "1:1091213170590:android:4a27d2212123d8e568688f",
         "android_client_info": {
-          "package_name": "com.example.chat_app"
+          "package_name": "com.example.chat_app_ahoy"
         }
       },
       "oauth_client": [
         {
-          "client_id": "893908220307-imi68lfcucg6onjfhlaud6pa1lih3lr6.apps.googleusercontent.com",
+          "client_id": "1091213170590-jgva2trq42hj7a0u889nuq4p5k84ema0.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDdSE69AbJu6NmctrQWJTzvhasRzOlXmcQ"
+          "current_key": "AIzaSyDBDa5E5yrzIGVipjfujrQ_Oo8EvkXfiUE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "893908220307-imi68lfcucg6onjfhlaud6pa1lih3lr6.apps.googleusercontent.com",
+              "client_id": "1091213170590-jgva2trq42hj7a0u889nuq4p5k84ema0.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

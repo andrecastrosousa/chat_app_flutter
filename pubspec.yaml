@@ -38,6 +38,8 @@ dependencies:
   firebase_auth: ^3.1.1
   eventify: ^1.0.0
   observable_ish: ^3.0.0
+  search_widget: ^1.0.2
+
 
 
   # The following adds the Cupertino Icons font to your application.

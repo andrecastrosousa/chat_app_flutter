@@ -19,7 +19,7 @@ class ChatAddUserChatScreen extends StatelessWidget {
         ),
         body: Column(
           children: [
-            ListTile(
+            const ListTile(
               leading: CircleAvatar(
                 backgroundColor: Colors.black,
                 child: Icon(Icons.group_add),

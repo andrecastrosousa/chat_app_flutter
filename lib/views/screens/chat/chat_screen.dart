@@ -27,11 +27,7 @@ class _ChatScreenState extends State<ChatScreen> {
       create: (context) => ChatBloc(chatService: ChatServiceImpl()),
       child: WillPopScope(
         onWillPop: () async {
-          Navigator.pop(context, 'Passed Value');
-
-          /// It's important that returned value (boolean) is false,
-          /// otherwise, it will pop the navigator stack twice;
-          /// since Navigator.pop is already called above ^
+          Navigator.pop(context);
           return false;
         },
         child: Scaffold(

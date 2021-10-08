@@ -13,6 +13,7 @@ abstract class ChatService {
   Future<List<AhoyUser>> getUsers();
   Future<List<Message>> getMessagesBetweenUsers(
       {required String userId1, required String userId2});
+  Future<List<AhoyUser>> getUsersToChat();
 }
 
 class ChatServiceImpl extends ChatService {
@@ -152,7 +153,7 @@ class ChatServiceImpl extends ChatService {
           }
         });
       });
-      
+
       Map<String, dynamic> listMessages = {};
 
       // find last message for every opened chat by authenticated user
@@ -178,19 +179,24 @@ class ChatServiceImpl extends ChatService {
                 sender: messageInfo['sender']);
           }
         });
-        if(messageInfo['text'] != '' && user.id != 'vytbUEPdPCYwY2lJwpRX') {
+        if (messageInfo['text'] != '' && user.id != 'vytbUEPdPCYwY2lJwpRX') {
           userListUpdated.add(user);
         } else {
-          user.lastMessage = Message(sender: '', text: '', sended_at: Timestamp.fromDate(DateTime(1999)));
+          user.lastMessage = Message(
+              sender: '',
+              text: '',
+              sended_at: Timestamp.fromDate(DateTime(1999)));
         }
       });
-      print('llllll $userListUpdated');
-      if(userListUpdated.length < 2) {
+
+      if (userListUpdated.length < 2) {
         return userListUpdated;
-      } if(userListUpdated.length < 3) {
+      }
+      if (userListUpdated.length < 3) {
         return orderUsers(userListUpdated);
       }
-      List<AhoyUser> result = quickSort(userListUpdated, 0, userList.length -1);
+      List<AhoyUser> result =
+          quickSort(userListUpdated, 0, userListUpdated.length - 1);
       return result;
     } catch (e) {
       throw ChatFailure('No connection...');
@@ -198,7 +204,7 @@ class ChatServiceImpl extends ChatService {
   }
 
   List<AhoyUser> quickSort(List<AhoyUser> list, int lowIndex, int highIndex) {
-    if(lowIndex < highIndex) {
+    if (lowIndex < highIndex) {
       int pi = partition(list, lowIndex, highIndex);
       quickSort(list, lowIndex, pi - 1);
       quickSort(list, lowIndex + 1, highIndex);
@@ -210,15 +216,19 @@ class ChatServiceImpl extends ChatService {
     if (list.isEmpty) {
       return 0;
     }
+
     AhoyUser pivot = list[highIndex];
+
     int i = lowIndex - 1;
-    for(int j = lowIndex; j < highIndex; j++) {
-      if(list[j].lastMessage.sended_at.compareTo(pivot.lastMessage.sended_at)>0 ) {
+    for (int j = lowIndex; j < highIndex; j++) {
+      if (list[j].lastMessage.sended_at.compareTo(pivot.lastMessage.sended_at) >
+          0) {
         i++;
         list = swap(list, i, j);
       }
     }
-    list = swap(list, i+ 1, highIndex);
+    print('lllllllllll');
+    list = swap(list, i + 1, highIndex);
     return i + 1;
   }
 
@@ -230,9 +240,44 @@ class ChatServiceImpl extends ChatService {
   }
 
   List<AhoyUser> orderUsers(List<AhoyUser> list) {
-    if (list[0].lastMessage.sended_at.compareTo(list[1].lastMessage.sended_at)> 0) {
+    if (list[0].lastMessage.sended_at.compareTo(list[1].lastMessage.sended_at) <
+        0) {
       list = swap(list, 0, 1);
     }
     return list;
+  }
+
+  Future<List<AhoyUser>> getUsersToChat() async {
+    List<AhoyUser> userList = <AhoyUser>[];
+    List<List<String>> chatsId = [];
+    try {
+      // take every user in firebase
+      final querySnapshot =
+          await _userCollection.get().then((QuerySnapshot querySnapshot) => {
+                userList = querySnapshot.docs.map((user) {
+                  var userModel = AhoyUser(
+                    id: user.id,
+                    title: "",
+                    firstName: user['name'],
+                    lastName: "",
+                    email: "",
+                    photoURL: "",
+                    phoneNo: "",
+                  );
+
+                  userModel.lastMessage = Message(
+                      text: '',
+                      sended_at: Timestamp.fromDate(
+                        DateTime(1999),
+                      ),
+                      sender: '');
+
+                  return userModel;
+                }).toList()
+              });
+      return userList;
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 }

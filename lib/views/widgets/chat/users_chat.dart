@@ -3,6 +3,7 @@ import 'package:chat_app_ahoy/blocs/chat/chat_state.dart';
 import 'package:chat_app_ahoy/views/screens/chat/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class UsersChat extends StatefulWidget {
   @override
@@ -41,8 +42,12 @@ class _UsersChatState extends State<UsersChat> {
                       },
                       trailing: Text(state.userList[index].lastMessage.sender ==
                               "vytbUEPdPCYwY2lJwpRX"
-                          ? 'You: ' + state.userList[index].lastMessage.text
-                          : '' + state.userList[index].lastMessage.text),
+                          ? 'You: ' + state.userList[index].lastMessage.text + '   ' + DateFormat.Hm().format(state
+                              .userList[index].lastMessage.sended_at
+                              .toDate())
+                          : '' + state.userList[index].lastMessage.text + '   ' + DateFormat.Hm().format(state
+                              .userList[index].lastMessage.sended_at
+                              .toDate())) ,
                     )
                   : null,
             ),

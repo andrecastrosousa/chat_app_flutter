@@ -24,6 +24,16 @@ class ChatBloc extends Cubit<ChatState> {
     }
   }
 
+  void loadUsersToChat() async {
+    emit(ChatLoading());
+    try {
+      final userList = await chatService.getUsersToChat();
+      emit(ChatLoaded(userList));
+    } catch (e) {
+      emit(ChatFailure('Error'));
+    }
+  }
+
   void getMessagesBetweenUsers(String userId1, String userId2) async {
     emit(ChatLoading());
     try {

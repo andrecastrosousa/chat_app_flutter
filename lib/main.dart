@@ -1,4 +1,5 @@
 import 'package:chat_app_ahoy/services/chat_service.dart';
+import 'package:chat_app_ahoy/views/screens/chat/chat_add_user_chat_screen.dart';
 import 'package:chat_app_ahoy/views/screens/chat/chat_screen.dart';
 import 'package:chat_app_ahoy/views/screens/chat/chat_users_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         routes: {
           ChatUsersScreen.routeName: (_) => ChatUsersScreen(),
           ChatScreen.routeName: (_) => ChatScreen(),
+          ChatAddUserChatScreen.routeName: (_) => ChatAddUserChatScreen(),
         },
       ),
     );

@@ -17,26 +17,36 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-
   @override
-  Widget build(BuildContext context)  {
+  Widget build(BuildContext context) {
     final usersData =
         ModalRoute.of(context)!.settings.arguments as Map<String, String>;
-    BlocProvider.of<ChatBloc>(context)
-        .getMessagesBetweenUsers(usersData['userId1'] as String, usersData['userId2'] as String);
+    BlocProvider.of<ChatBloc>(context).getMessagesBetweenUsers(
+        usersData['userId1'] as String, usersData['userId2'] as String);
     return BlocProvider(
       create: (context) => ChatBloc(chatService: ChatServiceImpl()),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(usersData['name'] as String),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: Messages(usersData['userId1']!, usersData['userId2']!),
-            ),
-            NewMessage(user1: usersData['userId1']!, user2: usersData['userId2']!),
-          ],
+      child: WillPopScope(
+        onWillPop: () async {
+          Navigator.pop(context, 'Passed Value');
+
+          /// It's important that returned value (boolean) is false,
+          /// otherwise, it will pop the navigator stack twice;
+          /// since Navigator.pop is already called above ^
+          return false;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(usersData['name'] as String),
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: Messages(usersData['userId1']!, usersData['userId2']!),
+              ),
+              NewMessage(
+                  user1: usersData['userId1']!, user2: usersData['userId2']!),
+            ],
+          ),
         ),
       ),
     );

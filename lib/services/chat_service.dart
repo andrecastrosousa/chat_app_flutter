@@ -178,10 +178,47 @@ class ChatServiceImpl extends ChatService {
           }
         });
       });
+      print('isssoooo $userList');
 
-      return userList;
+      List<AhoyUser> result = quickSort(userList, 0, userList.length -1);
+      print('isssoooo $userList');
+      print('isssoooooooooooo $result');
+      
+      return result;
     } catch (e) {
       throw ChatFailure('No connection...');
     }
+  }
+
+  List<AhoyUser> quickSort(List<AhoyUser> list, int lowIndex, int highIndex) {
+    if(lowIndex < highIndex) {
+      int pi = partition(list, lowIndex, highIndex);
+      quickSort(list, lowIndex, pi - 1);
+      quickSort(list, lowIndex + 1, highIndex);
+    }
+    return list;
+  }
+
+  int partition(List<AhoyUser> list, int lowIndex, int highIndex) {
+    if (list.isEmpty) {
+      return 0;
+    }
+    AhoyUser pivot = list[highIndex];
+    int i = lowIndex - 1;
+    for(int j = lowIndex; j < highIndex; j++) {
+      if(list[j].lastMessage.sended_at.compareTo(pivot.lastMessage.sended_at)>0 ) {
+        i++;
+        list = swap(list, i, j);
+      }
+    }
+    list = swap(list, i+ 1, highIndex);
+    return i + 1;
+  }
+
+  List<AhoyUser> swap(List<AhoyUser> list, int i, int j) {
+    AhoyUser temp = list[i];
+    list[i] = list[j];
+    list[j] = temp;
+    return list;
   }
 }

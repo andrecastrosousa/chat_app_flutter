@@ -152,7 +152,7 @@ class ChatServiceImpl extends ChatService {
           }
         });
       });
-
+      
       Map<String, dynamic> listMessages = {};
 
       // find last message for every opened chat by authenticated user
@@ -165,25 +165,32 @@ class ChatServiceImpl extends ChatService {
                     .limit(1)
                     .get()
               });
-
+      List<AhoyUser> userListUpdated = [];
       // Relation between chat with certain user with last message take
       userList.forEach((user) {
+        Map<String, dynamic> messageInfo = {'text': ''};
         chatsId.forEach((chatInfo) {
           if (chatInfo[1] == user.id || chatInfo[2] == user.id) {
-            var messageInfo = listMessages[chatInfo[0]].docs[0].data();
+            messageInfo = listMessages[chatInfo[0]].docs[0].data();
             user.lastMessage = Message(
                 text: messageInfo['text'],
                 sended_at: messageInfo['sended_at'],
                 sender: messageInfo['sender']);
           }
         });
+        if(messageInfo['text'] != '' && user.id != 'vytbUEPdPCYwY2lJwpRX') {
+          userListUpdated.add(user);
+        } else {
+          user.lastMessage = Message(sender: '', text: '', sended_at: Timestamp.fromDate(DateTime(1999)));
+        }
       });
-      print('isssoooo $userList');
-
-      List<AhoyUser> result = quickSort(userList, 0, userList.length -1);
-      print('isssoooo $userList');
-      print('isssoooooooooooo $result');
-      
+      print('llllll $userListUpdated');
+      if(userListUpdated.length < 2) {
+        return userListUpdated;
+      } if(userListUpdated.length < 3) {
+        return orderUsers(userListUpdated);
+      }
+      List<AhoyUser> result = quickSort(userListUpdated, 0, userList.length -1);
       return result;
     } catch (e) {
       throw ChatFailure('No connection...');
@@ -219,6 +226,13 @@ class ChatServiceImpl extends ChatService {
     AhoyUser temp = list[i];
     list[i] = list[j];
     list[j] = temp;
+    return list;
+  }
+
+  List<AhoyUser> orderUsers(List<AhoyUser> list) {
+    if (list[0].lastMessage.sended_at.compareTo(list[1].lastMessage.sended_at)> 0) {
+      list = swap(list, 0, 1);
+    }
     return list;
   }
 }

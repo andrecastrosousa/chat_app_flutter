@@ -17,6 +17,7 @@ class ChatBloc extends Cubit<ChatState> {
     emit(ChatLoading());
     try {
       final userList = await chatService.getUsers();
+      print('lllllllllllllll $userList');
       emit(ChatLoaded(userList));
     } catch(e) {
       emit(ChatFailure('Error'));

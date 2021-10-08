@@ -124,8 +124,9 @@ class ChatServiceImpl extends ChatService {
   @override
   Future<List<AhoyUser>> getUsers() async {
     List<AhoyUser> userList = <AhoyUser>[];
-    List<String> chatsId = <String>[];
+    List<List<String>> chatsId = [];
     try {
+      // take every user in firebase
       final querySnapshot =
           await _userCollection.get().then((QuerySnapshot querySnapshot) => {
                 userList = querySnapshot.docs
@@ -137,10 +138,46 @@ class ChatServiceImpl extends ChatService {
                           email: "",
                           photoURL: "",
                           phoneNo: "",
-                          lastMessage: "",
                         ))
                     .toList()
-              });      
+              });
+
+      // find everychat opened by authenticated user (vytbUEPdPCYwY2lJwpRX)
+      final querySnapshotLastMessage =
+          await _chatCollection.get().then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((chat) {
+          if (chat['userId1'] == 'vytbUEPdPCYwY2lJwpRX' ||
+              chat['userId2'] == 'vytbUEPdPCYwY2lJwpRX') {
+            chatsId.add([chat.id, chat['userId1'], chat['userId2']]);
+          }
+        });
+      });
+
+      Map<String, dynamic> listMessages = {};
+
+      // find last message for every opened chat by authenticated user
+      await Future.forEach(
+          chatsId,
+          (List<String> element) async => {
+                listMessages[element[0]] = await FirebaseFirestore.instance
+                    .collection('chats/' + element[0] + '/messages')
+                    .orderBy('sended_at', descending: true)
+                    .limit(1)
+                    .get()
+              });
+
+      // Relation between chat with certain user with last message take
+      userList.forEach((user) {
+        chatsId.forEach((chatInfo) {
+          if (chatInfo[1] == user.id || chatInfo[2] == user.id) {
+            var messageInfo = listMessages[chatInfo[0]].docs[0].data();
+            user.lastMessage = Message(
+                text: messageInfo['text'],
+                sended_at: messageInfo['sended_at'],
+                sender: messageInfo['sender']);
+          }
+        });
+      });
 
       return userList;
     } catch (e) {

@@ -33,6 +33,7 @@ class UsersChat extends StatelessWidget {
                         'name': state.userList[index].name
                       });
                 },
+                trailing: Text(state.userList[index].lastMessage.text),
               ) : null,
             ),
           );

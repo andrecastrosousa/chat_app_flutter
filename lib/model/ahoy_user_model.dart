@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'ahoy_message_model.dart';
+
 // this class is a singleton to make current user id accessible globally
 class CurrentUser {
   factory CurrentUser() => _instance;
@@ -18,15 +20,14 @@ class CurrentUser {
 }
 
 class AhoyUser extends Equatable {
-  const AhoyUser({
+  AhoyUser({
     required this.id,
     required this.title,
     required this.email,
     required this.firstName,
     required this.lastName,
     required this.phoneNo,
-    required this.photoURL,
-    required this.lastMessage,
+    required this.photoURL
   });
 
   factory AhoyUser.fromMap(Map<String, dynamic> data) {
@@ -37,8 +38,7 @@ class AhoyUser extends Equatable {
       firstName: data['firstName'] as String,
       lastName: data['lastName'] as String,
       photoURL: data['photoURL'] as String,
-      phoneNo: data['phoneNo'] as String,
-      lastMessage: data['lastMessage'] as String,
+      phoneNo: data['phoneNo'] as String
     );
   }
 
@@ -49,7 +49,7 @@ class AhoyUser extends Equatable {
   final String email;
   final String phoneNo;
   final String photoURL;
-  final String lastMessage;
+  late Message lastMessage;
 
   String get fullName =>
       firstName.isEmpty ? 'New User' : '$firstName $lastName';
